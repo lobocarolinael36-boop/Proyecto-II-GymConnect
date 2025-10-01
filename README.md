@@ -60,7 +60,7 @@ Para visualizar la evolución y el detalle del diagrama UML:
 En esta sección se detallarán los pasos para clonar el repositorio e iniciar el backend y el frontend una vez que comience la fase de codificación.
 
 # 1. Clonar el repositorio
-git clone https://aws.amazon.com/es/what-is/repo/
+git clone 
 cd gym-connect-app
 
 # 2. Configurar el Backend (En el futuro)
