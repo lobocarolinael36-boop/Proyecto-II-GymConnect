@@ -12,46 +12,46 @@ Lucas Haedo
 Thomas Barrera
 Santiago Lavorgnia 
 
-💡 Visión del Proyecto
-GymConnect va más allá de un simple sistema de gestión. Buscamos crear un ecosistema donde los miembros puedan gestionar su progreso, reservar clases, comprar productos y, lo más importante, interactuar en un Feed Social dedicado a la comunidad del gimnasio.
+---
 
-Stack Tecnológico Propuesto
+## 💡 Visión del Proyecto
+GymConnect va más allá de un simple sistema de gestión. Buscamos crear un ecosistema donde los miembros puedan gestionar su progreso, reservar clases, comprar productos y, lo más importante, interactuar en un Feed Social dedicado a la comunidad del gimnasio. &emsp;
+
+Stack Tecnológico Propuesto 
+
 <img width="624" height="178" alt="image" src="https://github.com/user-attachments/assets/c693718b-8a5b-468b-853e-edcc407fe86d" />
 
+---
 
-Exportar a Hojas de cálculo
-📋 Primera Etapa: Modelado y Requerimientos
+## 📋 Primera Etapa: Modelado y Requerimientos
 Esta sección resume el análisis y diseño de la Primera Etapa, sentando las bases de la arquitectura del sistema.
 
-Requerimientos Funcionales (RF) Destacados
+### Requerimientos Funcionales (RF) Destacados
 El sistema contempla módulos clave de la aplicación, incluyendo:
 
-Autenticación Segura (RF001/RNF002): Registro, Login y uso de JWT con contraseñas Bcrypt.
+- Autenticación Segura (RF001/RNF002): Registro, Login y uso de JWT con contraseñas Bcrypt.
+- Tienda Online (RF004-RF006): Catálogo de productos, Carrito persistente y gestión de órdenes.
+- Gestión (RF003/RF007): Panel de Administración para CRUD de Usuarios y Productos.
+- Social & Clases (RF008-RF010): Reserva de clases, Feed de actividad y sistema de Gamificación (Logros).
 
-Tienda Online (RF004-RF006): Catálogo de productos, Carrito persistente y gestión de órdenes.
-
-Gestión (RF003/RF007): Panel de Administración para CRUD de Usuarios y Productos.
-
-Social & Clases (RF008-RF010): Reserva de clases, Feed de actividad y sistema de Gamificación (Logros).
-
-Requerimientos No Funcionales (RNF)
+### Requerimientos No Funcionales (RNF)
 El diseño prioriza la Seguridad (JWT, Bcrypt), la Usabilidad (responsive) y el Rendimiento (API < 2 segundos).
 
 Limitaciones Definidas
 Para la entrega funcional inicial, se establece que:
+- La Pasarela de Pago real (MercadoPago/Stripe) se simulará.
+- Las notificaciones en tiempo real (Socket.io) y App Mobile se consideran bonus para etapas posteriores.
 
-La Pasarela de Pago real (MercadoPago/Stripe) se simulará.
+---
 
-Las notificaciones en tiempo real (Socket.io) y App Mobile se consideran bonus para etapas posteriores.
-
-📐 Diseño y Modelado (UML & ERD)
+## 📐 Diseño y Modelado (UML & ERD)
 Los diagramas visuales y el diccionario de datos documentan la estructura del sistema.
 
 Diagramas y Documentación
 <img width="622" height="289" alt="image" src="https://github.com/user-attachments/assets/636bdbed-b14e-4d75-9322-0c584fc526c2" />
 
+---
 
-Exportar a Hojas de cálculo
 🔗 Enlace a DRAW.io
 Para visualizar la evolución y el detalle del diagrama UML:
 https://drive.google.com/file/d/1WqgAtTloJcbxYR5xUaBG8VL7pSZQSKUS/view?usp=drive_link
