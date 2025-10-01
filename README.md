@@ -54,7 +54,7 @@ Diagramas y Documentación
 
 🔗 Enlace a DRAW.io
 Para visualizar la evolución y el detalle del diagrama UML:
-https://drive.google.com/file/d/1WqgAtTloJcbxYR5xUaBG8VL7pSZQSKUS/view?usp=drive_link
+[https://drive.google.com/file/d/1WqgAtTloJcbxYR5xUaBG8VL7pSZQSKUS/view?usp=drive_link](https://drive.google.com/file/d/1WqgAtTloJcbxYR5xUaBG8VL7pSZQSKUS/view?usp=drive_link)
 
 ⚙️ Instrucciones de Instalación (Próxima Etapa)
 En esta sección se detallarán los pasos para clonar el repositorio e iniciar el backend y el frontend una vez que comience la fase de codificación.
