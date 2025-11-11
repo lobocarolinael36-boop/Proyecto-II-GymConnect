@@ -1,13 +1,38 @@
-// frontend/src/components/ClassCard.jsx
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { enrollmentAPI, classesAPI } from '../services/api';
 
-const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
+// Permite pasar tanto un objeto "clase" como props individuales (producto)
+const ClassCard = ({
+  clase, // si es clase, trae todo acá
+  nombre,
+  descripcion,
+  precio,
+  imagen,
+  fecha,      // solo para clases
+  cupos,      // solo para clases
+  intensidad, // solo para clases
+  onClick,    // para productos: compra; para clases: inscribirse/eliminar...
+  labelBtn,   // texto de botón, "Comprar"/"Inscribirse"
+  showEnrollButton = true,
+  onEnroll,
+  onUpdate
+}) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  // Decide si es clase o producto
+  const isClase = !!clase;
+
+  // Compatibilidad: usa props según corresponda
+  const renderNombre = isClase ? clase.nombre : nombre;
+  const renderDescripcion = isClase ? clase.descripcion : descripcion;
+  const renderImagen = isClase ? (clase.imagen || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop') : imagen;
+  const renderPrecio = isClase ? null : precio;
+
+  // --- Solo para clases ---
   const formatDate = (dateString) => {
+    if (!dateString) return null;
     const date = new Date(dateString);
     return date.toLocaleDateString('es-AR', {
       weekday: 'long',
@@ -26,7 +51,6 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
       completa: { bg: '#e2e8f0', color: '#2d3748', text: '■ Completa' }
     };
     const badge = badges[estado] || badges.activa;
-    
     return (
       <span style={{
         backgroundColor: badge.bg,
@@ -41,20 +65,17 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
     );
   };
 
+  // Inscripción a clase
   const handleEnroll = async () => {
-    if (!user) return;
-    
+    if (!user || !isClase) return;
+
     setLoading(true);
     try {
       await enrollmentAPI.enroll({
         usuario_id: user.id,
         clase_id: clase.id
       });
-      
-      if (onEnroll) {
-        onEnroll(clase.id);
-      }
-      
+      if (onEnroll) onEnroll(clase.id);
       alert('¡Inscripción exitosa!');
     } catch (error) {
       console.error('Error al inscribirse:', error);
@@ -64,14 +85,14 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
     }
   };
 
+  // Toggle estado clase (profesor)
   const handleToggleEstado = async () => {
+    if (!isClase) return;
     setLoading(true);
     try {
       await classesAPI.toggleEstado(clase.id);
       alert(`Clase ${clase.estado === 'activa' ? 'desactivada' : 'activada'} exitosamente`);
-      if (onUpdate) {
-        onUpdate();
-      }
+      if (onUpdate) onUpdate();
     } catch (error) {
       console.error('Error al cambiar estado:', error);
       alert('Error al cambiar el estado de la clase');
@@ -80,10 +101,10 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
     }
   };
 
-  const disponibilidadPorcentaje = (clase.cupos_disponibles / clase.cupos_maximos) * 100;
-  const disponibilidadColor = 
+  const disponibilidadPorcentaje = isClase && (clase.cupos_disponibles / clase.cupos_maximos) * 100;
+  const disponibilidadColor =
     disponibilidadPorcentaje > 50 ? '#00ff87' :
-    disponibilidadPorcentaje > 20 ? '#ffd700' : 
+    disponibilidadPorcentaje > 20 ? '#ffd700' :
     '#ff4444';
 
   return (
@@ -95,21 +116,23 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
       border: '1px solid #2a2a2a',
       transition: 'all 0.3s ease'
     }}>
-      {/* Imagen de la clase */}
+      {/* Imagen */}
       <div style={{
         height: '200px',
-        backgroundImage: `url(${clase.imagen || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop'})`,
+        backgroundImage: `url(${renderImagen})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative'
       }}>
-        <div style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem'
-        }}>
-          {getEstadoBadge(clase.estado)}
-        </div>
+        {isClase && (
+          <div style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem'
+          }}>
+            {getEstadoBadge(clase.estado)}
+          </div>
+        )}
         <div style={{
           position: 'absolute',
           bottom: 0,
@@ -119,45 +142,70 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
           padding: '1.5rem',
           color: 'white'
         }}>
-          <h3 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 'bold' }}>{clase.nombre}</h3>
+          <h3 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 'bold' }}>{renderNombre}</h3>
         </div>
       </div>
 
-      {/* Info de la clase */}
+      {/* Info */}
       <div style={{ padding: '1.5rem' }}>
-        {clase.descripcion && (
+        {renderDescripcion && (
           <p style={{ color: '#a0a0a0', marginBottom: '1rem', fontSize: '0.9rem' }}>
-            {clase.descripcion}
+            {renderDescripcion}
           </p>
         )}
 
-        <div style={{ marginBottom: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span style={{ color: '#00ff87' }}>📅</span>
-            <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>
-              {formatDate(clase.horario)}
-            </span>
+        {/* SOLO CLASE */}
+        {isClase &&
+          <div style={{ marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span style={{ color: '#00ff87' }}>📅</span>
+              <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>
+                {formatDate(clase.horario)}
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span style={{ color: '#00ff87' }}>⏱️</span>
+              <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>
+                {clase.duracion_minutos} minutos
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ color: '#00ff87' }}>👥</span>
+              <span style={{ color: disponibilidadColor, fontWeight: 'bold', fontSize: '0.9rem' }}>
+                {clase.cupos_disponibles}/{clase.cupos_maximos} disponibles
+              </span>
+            </div>
           </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span style={{ color: '#00ff87' }}>⏱️</span>
-            <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>
-              {clase.duracion_minutos} minutos
-            </span>
-          </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ color: '#00ff87' }}>👥</span>
-            <span style={{ color: disponibilidadColor, fontWeight: 'bold', fontSize: '0.9rem' }}>
-              {clase.cupos_disponibles}/{clase.cupos_maximos} disponibles
-            </span>
-          </div>
-        </div>
+        }
+
+        {/* SOLO PRODUCTO (tienda) */}
+        {renderPrecio &&
+          <p style={{ color: "#fff", fontWeight: 600, fontSize: "1.15rem" }}>${renderPrecio}</p>
+        }
 
         {/* Botones */}
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {/* Botón para profesor */}
-          {user?.rol === 'profesor' && (
+          {/* Botón de acción general (productos) */}
+          {onClick && (
+            <button
+              onClick={onClick}
+              style={{
+                flex: 1,
+                padding: '12px',
+                backgroundColor: '#00ff87',
+                color: '#0a0a0a',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              }}>
+              {labelBtn || "Acción"}
+            </button>
+          )}
+
+          {/* Botón para profesor de clases */}
+          {isClase && user?.rol === 'profesor' && (
             <button
               onClick={handleToggleEstado}
               disabled={loading}
@@ -171,14 +219,13 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontSize: '14px',
                 fontWeight: 'bold'
-              }}
-            >
+              }}>
               {loading ? 'Procesando...' : (clase.estado === 'activa' ? 'Desactivar' : 'Activar')}
             </button>
           )}
 
-          {/* Botón de inscripción para clientes */}
-          {showEnrollButton && user?.rol !== 'profesor' && clase.estado === 'activa' && clase.cupos_disponibles > 0 && (
+          {/* Botón de inscripción para clientes en clases */}
+          {isClase && showEnrollButton && user?.rol !== 'profesor' && clase.estado === 'activa' && clase.cupos_disponibles > 0 && (
             <button
               onClick={handleEnroll}
               disabled={loading}
@@ -192,14 +239,14 @@ const ClassCard = ({ clase, onEnroll, showEnrollButton = true, onUpdate }) => {
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontSize: '14px',
                 fontWeight: 'bold'
-              }}
-            >
+              }}>
               {loading ? 'Inscribiendo...' : 'Inscribirse'}
             </button>
           )}
         </div>
 
-        {clase.cupos_disponibles === 0 && user?.rol !== 'profesor' && (
+        {/* Mensaje clase llena */}
+        {isClase && clase.cupos_disponibles === 0 && user?.rol !== 'profesor' && (
           <div style={{
             backgroundColor: '#fed7d7',
             color: '#742a2a',

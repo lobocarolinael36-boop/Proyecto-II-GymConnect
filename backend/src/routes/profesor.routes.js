@@ -10,7 +10,7 @@ const router = express.Router();
 // Crear solicitud de profesor
 router.post('/solicitar', async (req, res) => {
   try {
-    const { nombre, apellido, email_personal, telefono, mensaje } = req.body;
+    const { nombre, email_personal, telefono, mensaje } = req.body;
 
     const existingSolicitud = await ProfesorRequest.findOne({ 
       where: { email_personal } 
@@ -68,7 +68,8 @@ router.post('/:id/aprobar', async (req, res) => {
     }
 
     // Generar email corporativo
-    const emailCorporativo = `${solicitud.nombre.toLowerCase()}.${solicitud.apellido.toLowerCase()}@profesor.gymconnect.com`;
+    const nombreLimpio = solicitud.nombre.toLowerCase().replace(/\s+/g, '');
+    const emailCorporativo = `${nombreLimpio}.profesor@gymconnect.com`;
     
     // Generar token de activación
     const token = crypto.randomBytes(32).toString('hex');

@@ -68,6 +68,18 @@ const Navbar = () => {
           >
             Dashboard
           </button>
+          <button onClick={() => navigate('/tienda')} style={{
+          background: isActive('/tienda') ? 'rgba(0, 255, 135, 0.1)' : 'transparent',
+          color: isActive('/tienda') ? '#00ff87' : '#a0a0a0',
+          border: 'none',
+          padding: '0.5rem 1rem',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          fontSize: '0.95rem',
+          fontWeight: '600',
+          transition: 'all 0.3s ease'
+        }}> Tienda</button>
+
 
           <button
             onClick={() => navigate('/classes')}

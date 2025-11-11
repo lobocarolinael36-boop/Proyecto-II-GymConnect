@@ -10,11 +10,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// IMPORTANTE: Para Gmail, necesitas crear una "Contraseña de aplicación"
-// Instrucciones: https://support.google.com/accounts/answer/185833
-
 export const enviarEmailAprobacion = async (datosProfesor) => {
-  const { nombre, apellido, email_personal, email_corporativo, password_temporal } = datosProfesor;
+  const { nombre, email_personal, email_corporativo, password_temporal } = datosProfesor;
 
   const mailOptions = {
     from: process.env.EMAIL_USER || 'tu-email@gmail.com',
@@ -27,7 +24,7 @@ export const enviarEmailAprobacion = async (datosProfesor) => {
         </div>
         
         <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <h2 style="color: #00ff87; margin-top: 0;">¡Felicidades, ${nombre} ${apellido}!</h2>
+          <h2 style="color: #00ff87; margin-top: 0;">¡Felicidades, ${nombre} !</h2>
           
           <p style="color: #333; font-size: 16px; line-height: 1.6;">
             Tu solicitud para ser profesor en <strong>GymConnect</strong> ha sido aprobada exitosamente. 

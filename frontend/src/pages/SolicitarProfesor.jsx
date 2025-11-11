@@ -7,7 +7,6 @@ const SolicitarProfesor = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     nombre: '',
-    apellido: '',
     email_personal: '',
     telefono: '',
     mensaje: ''
@@ -113,7 +112,7 @@ const SolicitarProfesor = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div style={ {marginBottom: '1rem' }}>
             <div>
               <label style={{ display: 'block', color: '#a0a0a0', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
                 Nombre
@@ -122,28 +121,6 @@ const SolicitarProfesor = () => {
                 type="text"
                 name="nombre"
                 value={formData.nombre}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  background: '#0a0a0a',
-                  border: '1px solid #2a2a2a',
-                  borderRadius: '0.5rem',
-                  color: '#ffffff',
-                  fontSize: '1rem'
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', color: '#a0a0a0', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                Apellido
-              </label>
-              <input
-                type="text"
-                name="apellido"
-                value={formData.apellido}
                 onChange={handleChange}
                 required
                 style={{

@@ -1,4 +1,5 @@
 // frontend/src/App.jsx
+//configura las rutas de la aplicación
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Home from './pages/Home';
@@ -10,6 +11,8 @@ import Classes from './pages/Classes';
 import MyClasses from './pages/MyClasses';
 import SolicitarProfesor from './pages/SolicitarProfesor'; // NUEVO
 import AdminPanel from './pages/AdminPanel'; // NUEVO
+import Tienda from './pages/tienda.jsx';
+
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user } = useAuth();
@@ -28,8 +31,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/solicitar-profesor" element={<SolicitarProfesor />} /> {/* NUEVO */}
-          
+          <Route path="/solicitar-profesor" element={<SolicitarProfesor />} /> 
+          <Route path="/tienda" element={<Tienda />} />
+
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/classes" element={<ProtectedRoute><Classes /></ProtectedRoute>} />
